@@ -176,7 +176,7 @@ public class SensorListener extends Service implements SensorEventListener {
     public static Notification getNotification(final Context context) {
         if (BuildConfig.DEBUG) Logger.log("getNotification");
         SharedPreferences prefs = context.getSharedPreferences("stepCounter", Context.MODE_PRIVATE);
-        int goal = prefs.getInt("goal", 10000);
+        int goal = prefs.getInt("goal", 20);
         Database db = Database.getInstance(context);
         int today_offset = db.getSteps(Util.getToday());
         if (steps == 0)

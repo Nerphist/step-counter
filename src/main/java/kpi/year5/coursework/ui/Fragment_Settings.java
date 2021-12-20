@@ -31,7 +31,7 @@ import kpi.year5.coursework.util.API26Wrapper;
 
 public class Fragment_Settings extends PreferenceFragment implements OnPreferenceClickListener {
 
-    final static int DEFAULT_GOAL = 10000;
+    final static int DEFAULT_GOAL = 20;
     final static float DEFAULT_STEP_SIZE = Locale.getDefault() == Locale.US ? 2.5f : 75f;
     final static String DEFAULT_STEP_UNIT = Locale.getDefault() == Locale.US ? "ft" : "cm";
 
@@ -126,7 +126,7 @@ public class Fragment_Settings extends PreferenceFragment implements OnPreferenc
                 final NumberPicker np = new NumberPicker(getActivity());
                 np.setMinValue(1);
                 np.setMaxValue(100000);
-                np.setValue(prefs.getInt("goal", 10000));
+                np.setValue(prefs.getInt("goal", 20));
                 builder.setView(np);
                 builder.setTitle(R.string.set_goal);
                 builder.setPositiveButton(android.R.string.ok, new OnClickListener() {
