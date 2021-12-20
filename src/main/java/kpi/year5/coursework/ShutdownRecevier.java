@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import kpi.year5.coursework.BuildConfig;
 import kpi.year5.coursework.util.Logger;
 import kpi.year5.coursework.util.Util;
 
@@ -16,7 +15,7 @@ public class ShutdownRecevier extends BroadcastReceiver {
     public void onReceive(final Context context, final Intent intent) {
         if (BuildConfig.DEBUG) Logger.log("shutting down");
 
-        context.startService(new Intent(context, SensorListener.class));
+        context.startService(new Intent(context, StepsSensorListener.class));
 
         // if the user used a root script for shutdown, the DEVICE_SHUTDOWN
         // broadcast might not be send. Therefore, the app will check this

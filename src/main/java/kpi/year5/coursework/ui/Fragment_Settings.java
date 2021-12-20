@@ -26,7 +26,7 @@ import android.widget.RadioGroup;
 import java.util.Locale;
 
 import kpi.year5.coursework.R;
-import kpi.year5.coursework.SensorListener;
+import kpi.year5.coursework.StepsSensorListener;
 import kpi.year5.coursework.util.API26Wrapper;
 
 public class Fragment_Settings extends PreferenceFragment implements OnPreferenceClickListener {
@@ -57,10 +57,10 @@ public class Fragment_Settings extends PreferenceFragment implements OnPreferenc
                             NotificationManager manager = (NotificationManager) getActivity()
                                     .getSystemService(Context.NOTIFICATION_SERVICE);
                             if ((Boolean) newValue) {
-                                manager.notify(SensorListener.NOTIFICATION_ID,
-                                        SensorListener.getNotification(getActivity()));
+                                manager.notify(StepsSensorListener.NOTIFICATION_ID,
+                                        StepsSensorListener.getNotification(getActivity()));
                             } else {
-                                manager.cancel(SensorListener.NOTIFICATION_ID);
+                                manager.cancel(StepsSensorListener.NOTIFICATION_ID);
                             }
 
                             return true;
@@ -93,7 +93,7 @@ public class Fragment_Settings extends PreferenceFragment implements OnPreferenc
         getActivity().getActionBar().setDisplayHomeAsUpEnabled(true);
         if (Build.VERSION.SDK_INT >= 26) { // notification settings might have changed
             API26Wrapper.startForegroundService(getActivity(),
-                    new Intent(getActivity(), SensorListener.class));
+                    new Intent(getActivity(), StepsSensorListener.class));
         }
     }
 
@@ -136,7 +136,7 @@ public class Fragment_Settings extends PreferenceFragment implements OnPreferenc
                         prefs.edit().putInt("goal", np.getValue()).commit();
                         preference.setSummary(getString(R.string.goal_summary, np.getValue()));
                         dialog.dismiss();
-                        getActivity().startService(new Intent(getActivity(), SensorListener.class)
+                        getActivity().startService(new Intent(getActivity(), StepsSensorListener.class)
                                 .putExtra("updateNotificationState", true));
                     }
                 });

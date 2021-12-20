@@ -14,6 +14,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.wearable.view.WatchViewStub;
 import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -38,7 +39,7 @@ import java.util.Locale;
 import kpi.year5.coursework.BuildConfig;
 import kpi.year5.coursework.Database;
 import kpi.year5.coursework.R;
-import kpi.year5.coursework.SensorListener;
+import kpi.year5.coursework.StepsSensorListener;
 import kpi.year5.coursework.util.API26Wrapper;
 import kpi.year5.coursework.util.Logger;
 import kpi.year5.coursework.util.Util;
@@ -48,10 +49,41 @@ public class Fragment_Overview extends Fragment implements SensorEventListener {
     private TextView stepsView, totalView, averageView;
     private PieModel sliceGoal, sliceCurrent;
     private PieChart pg;
+    private SensorManager mSensorManager;
+    private Sensor mHeartSensor;
+    private TextView mTextView;
+    WatchViewStub mStub;
 
     private int todayOffset, total_start, goal, since_boot, total_days;
     public final static NumberFormat formatter = NumberFormat.getInstance(Locale.getDefault());
     private boolean showSteps = true;
+
+
+    private SensorEventListener mSensorEventListener = new SensorEventListener() {
+
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        }
+
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            final SensorEvent event1 = event;
+            if (BuildConfig.DEBUG) Logger.log("marker 3");
+
+            mStub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
+
+                @Override
+                public void onLayoutInflated(WatchViewStub stub) {
+                    mTextView = (TextView) stub.findViewById(R.id.heart_rate_text);
+                    if (BuildConfig.DEBUG) Logger.log("marker 1");
+                    mTextView.setText(Float.toString(event1.values[0]));
+                }
+            });
+        }
+
+
+    };
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -59,18 +91,34 @@ public class Fragment_Overview extends Fragment implements SensorEventListener {
         setHasOptionsMenu(true);
         if (Build.VERSION.SDK_INT >= 26) {
             API26Wrapper.startForegroundService(getActivity(),
-                    new Intent(getActivity(), SensorListener.class));
+                    new Intent(getActivity(), StepsSensorListener.class));
         } else {
-            getActivity().startService(new Intent(getActivity(), SensorListener.class));
+            getActivity().startService(new Intent(getActivity(), StepsSensorListener.class));
         }
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        final View v = inflater.inflate(R.layout.fragment_overview, null);
+        final View v = inflater.inflate(R.layout.heart_rate, null);
         stepsView = (TextView) v.findViewById(R.id.steps);
         totalView = (TextView) v.findViewById(R.id.total);
         averageView = (TextView) v.findViewById(R.id.average);
+
+
+        mStub = (WatchViewStub) v.findViewById(R.id.heart_rate);
+
+        mSensorManager = (SensorManager) getActivity().getSystemService(Context.SENSOR_SERVICE);
+        mHeartSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE);
+
+
+        mStub.setOnLayoutInflatedListener(new WatchViewStub.OnLayoutInflatedListener() {
+            @Override
+            public void onLayoutInflated(WatchViewStub stub) {
+                mTextView = (TextView) stub.findViewById(R.id.heart_rate_text);
+                mTextView.setText("No heart rate registered");
+                if (BuildConfig.DEBUG) Logger.log("marker 2");
+            }
+        });
 
         pg = (PieChart) v.findViewById(R.id.graph);
 
@@ -121,11 +169,11 @@ public class Fragment_Overview extends Fragment implements SensorEventListener {
             new AlertDialog.Builder(getActivity()).setTitle(R.string.no_sensor)
                     .setMessage(R.string.no_sensor_explain)
                     .setNeutralButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(final DialogInterface dialogInterface, int i) {
-                    dialogInterface.dismiss();
-                }
-            }).create().show();
+                        @Override
+                        public void onClick(final DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                        }
+                    }).create().show();
         } else {
             sm.registerListener(this, sensor, SensorManager.SENSOR_DELAY_UI, 0);
         }

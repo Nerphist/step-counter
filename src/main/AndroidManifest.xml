@@ -13,7 +13,9 @@
     <uses-feature
         android:name="android.hardware.sensor.stepcounter"
         android:required="true"/>
+    <uses-feature android:name="android.hardware.type.watch" />
 
+    <uses-permission android:name="android.permission.BODY_SENSORS" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
@@ -48,7 +50,7 @@
         </receiver>
 
         <service
-            android:name="kpi.year5.coursework.SensorListener"/>
+            android:name="kpi.year5.coursework.StepsSensorListener"/>
 
         <service
             android:name="kpi.year5.coursework.widget.DashClock"

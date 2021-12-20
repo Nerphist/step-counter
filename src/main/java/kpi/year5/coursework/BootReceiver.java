@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 
-import kpi.year5.coursework.BuildConfig;
 import kpi.year5.coursework.util.API26Wrapper;
 import kpi.year5.coursework.util.Logger;
 
@@ -37,9 +36,9 @@ public class BootReceiver extends BroadcastReceiver {
         prefs.edit().remove("correctShutdown").apply();
         
         if (Build.VERSION.SDK_INT >= 26) {
-            API26Wrapper.startForegroundService(context, new Intent(context, SensorListener.class));
+            API26Wrapper.startForegroundService(context, new Intent(context, StepsSensorListener.class));
         } else {
-            context.startService(new Intent(context, SensorListener.class));
+            context.startService(new Intent(context, StepsSensorListener.class));
         }
     }
 }

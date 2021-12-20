@@ -19,14 +19,14 @@ import android.widget.TextView;
 
 import kpi.year5.coursework.BuildConfig;
 import kpi.year5.coursework.R;
-import kpi.year5.coursework.SensorListener;
+import kpi.year5.coursework.StepsSensorListener;
+
 
 public class Activity_Main extends FragmentActivity {
-
     @Override
     protected void onCreate(final Bundle b) {
         super.onCreate(b);
-        startService(new Intent(this, SensorListener.class));
+        startService(new Intent(this, StepsSensorListener.class));
         if (b == null) {
             // Create new fragment and transaction
             Fragment newFragment = new Fragment_Overview();
@@ -46,6 +46,12 @@ public class Activity_Main extends FragmentActivity {
                 PermissionChecker.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 0);
         }
+        if (BuildConfig.DEBUG && Build.VERSION.SDK_INT >= 23 && PermissionChecker
+                .checkSelfPermission(this, Manifest.permission.BODY_SENSORS) !=
+                PermissionChecker.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.BODY_SENSORS}, 0);
+        }
+
     }
 
     @Override

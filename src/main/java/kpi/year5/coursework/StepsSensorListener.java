@@ -23,8 +23,6 @@ import java.text.NumberFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import kpi.year5.coursework.BuildConfig;
-import kpi.year5.coursework.R;
 import kpi.year5.coursework.ui.Activity_Main;
 import kpi.year5.coursework.util.API23Wrapper;
 import kpi.year5.coursework.util.API26Wrapper;
@@ -39,7 +37,7 @@ import kpi.year5.coursework.widget.WidgetUpdateService;
  * This service won't be needed any more if there is a way to read the
  * step-value without waiting for a sensor event
  */
-public class SensorListener extends Service implements SensorEventListener {
+public class StepsSensorListener extends Service implements SensorEventListener {
 
     public final static int NOTIFICATION_ID = 1;
     private final static long MICROSECONDS_IN_ONE_MINUTE = 60000000;
@@ -133,7 +131,7 @@ public class SensorListener extends Service implements SensorEventListener {
         AlarmManager am =
                 (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
         PendingIntent pi = PendingIntent
-                .getService(getApplicationContext(), 2, new Intent(this, SensorListener.class),
+                .getService(getApplicationContext(), 2, new Intent(this, StepsSensorListener.class),
                         PendingIntent.FLAG_UPDATE_CURRENT);
         if (Build.VERSION.SDK_INT >= 23) {
             API23Wrapper.setAlarmWhileIdle(am, AlarmManager.RTC, nextUpdate, pi);
@@ -157,7 +155,7 @@ public class SensorListener extends Service implements SensorEventListener {
         // Restart service in 500 ms
         ((AlarmManager) getSystemService(Context.ALARM_SERVICE))
                 .set(AlarmManager.RTC, System.currentTimeMillis() + 500, PendingIntent
-                        .getService(this, 3, new Intent(this, SensorListener.class), 0));
+                        .getService(this, 3, new Intent(this, StepsSensorListener.class), 0));
     }
 
     @Override
